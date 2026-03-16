@@ -48,8 +48,13 @@ This project is a number guessing game built with Streamlit where the player sel
 
 ## 📸 Demo
 
-- [ ] Insert screenshot: fixed winning game view (`streamlit run app.py`)
-- [ ] Insert screenshot: `pytest` passing output (optional challenge evidence)
+- [X] Insert screenshot: fixed winning game view (`streamlit run app.py`)
+
+![Winning game demo](screenshots/winning-game.png)
+
+- [X] Insert screenshot: `pytest` passing output (optional challenge evidence)
+
+![Pytest passing](screenshots/pytest-passing.png)
 
 ### Test Status
 `pytest` result: **7 passed**
