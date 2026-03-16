@@ -25,13 +25,34 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] Describe the game's purpose.
+- [x] Detail which bugs you found.
+- [x] Explain what fixes you applied.
+
+### Game Purpose
+This project is a number guessing game built with Streamlit where the player selects a difficulty, guesses a secret number, and receives feedback until they win or run out of attempts. The game tracks attempts, guess history, and score. The assignment focus is debugging AI-generated code, improving code structure, and validating repairs with automated tests.
+
+### Bugs Found
+1. Hint direction bug: when a guess was too high, the app told the user to go higher (and vice versa), which made gameplay misleading.
+2. Secret type/state bug: the app sometimes converted the secret number to a string before comparison, causing inconsistent guess logic.
+3. New game reset bug: pressing "New Game" did not reliably reset the full session state and could leave the app in a broken interaction state.
+4. Attempts/flow bug: attempts handling could feel inconsistent, and invalid guesses could still interfere with expected game progression.
+
+### Fixes Applied
+1. Refactored core game logic into `logic_utils.py` by implementing `get_range_for_difficulty`, `parse_guess`, `check_guess`, and `update_score`.
+2. Updated `app.py` to import and use logic helpers instead of keeping buggy duplicate logic in the UI layer.
+3. Fixed hint logic so outcomes and guidance match correctly (`Too High -> Try lower`, `Too Low -> Try higher`).
+4. Stabilized state management by resetting secret/attempts/score/status/history correctly on "New Game" and when difficulty changes.
+5. Added safer input handling (empty input, non-number input, and fractional decimal rejection) and range checks.
+6. Repaired and expanded tests to validate outcomes, parsing behavior, and scoring updates.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+- [ ] Insert screenshot: fixed winning game view (`streamlit run app.py`)
+- [ ] Insert screenshot: `pytest` passing output (optional challenge evidence)
+
+### Test Status
+`pytest` result: **7 passed**
 
 ## 🚀 Stretch Features
 
