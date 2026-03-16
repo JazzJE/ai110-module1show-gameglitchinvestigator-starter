@@ -9,7 +9,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 The game looked polished at first because the UI rendered correctly and accepted guesses. After a few rounds, the behavior became inconsistent: hints felt wrong, resets were unreliable, and game state did not always behave as expected. The app gave the impression that it worked while hiding logic and state bugs underneath. This made it a good example of why "it runs" is not the same as "it is correct."
 
 - List at least two concrete bugs you noticed at the start  
-  (for example: "the secret number kept changing" or "the hints were backwards").
+  (for example: "the hints were backwards").
 
   - The hints were backwards: when the guess was too high, the app said to go higher, and when too low, it said to go lower.
   - The code sometimes compared an integer guess against a string version of the secret number, which could cause misleading outcomes.
@@ -46,9 +46,7 @@ I ran a test that checks a high guess (`60`) against secret `50` and confirms th
 
 ## 4. What did you learn about Streamlit and state?
 
-- In your own words, explain why the secret number kept changing in the original app.
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
-- What change did you make that finally gave the game a stable secret number?
 
 The secret issue came from state logic and inconsistent update patterns, not just random number generation itself. In Streamlit, every interaction reruns the script from top to bottom, so values must be stored in `st.session_state` if they should persist between clicks. I would explain reruns as "the app redraws on every interaction, but session_state is your memory." The final stability came from initializing `secret` once per game, resetting it only on explicit events (`New Game` or difficulty change), and keeping comparisons strictly int-to-int.
 
