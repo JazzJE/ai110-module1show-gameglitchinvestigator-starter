@@ -142,16 +142,47 @@ What changed:
 ## Reflection
 This project reinforced that AI reliability depends on system design, not just model output quality. Confidence, retrieval trace, and guardrails made behavior easier to inspect and trust. Iterative testing showed that deterministic checks are powerful for controlling failure modes in small applied AI systems.
 
-## Loom Walkthrough
-Add your recording link here:
+## Screenshot Walkthrough (Submission Alternative)
+This repository uses the screenshot walkthrough option instead of a Loom recording. The walkthrough demonstrates end-to-end behavior, AI recommendations, and reliability checks.
 
-- Loom demo: `PASTE_YOUR_LOOM_LINK_HERE`
+### Step 1: Run the app end-to-end
+Command used:
 
-Video checklist coverage:
-- End-to-end run with 2-3 inputs
-- AI feature behavior
-- Reliability/guardrail behavior
-- Clear outputs for each case
+python -m streamlit run app.py
+
+Evidence screenshot:
+
+![Winning game demo](screenshots/winning-game.png)
+
+### Step 2: Example inputs and AI-style responses
+These examples reflect the same system behavior validated by tests and the evaluation harness.
+
+1. Fresh game (Normal range 1-100)
+Input context: no prior rounds.
+System response: advisor recommends midpoint guess 50 with moderate confidence.
+
+2. Narrowed bounds from hint history
+Input rounds: 50 -> Too High, 25 -> Too Low.
+System response: bounds become [26, 49], advisor recommends 37, confidence increases.
+
+3. Conflicting history guardrail
+Input rounds: 30 -> Too Low, 25 -> Too High.
+System response: advisor blocks recommendation and requests reset (guardrail path).
+
+### Step 3: Reliability checks
+Commands used:
+
+pytest
+python evaluate_system.py
+
+Evidence screenshot:
+
+![Pytest passing](screenshots/pytest-passing.png)
+
+Observed evaluation summary:
+- All unit tests pass.
+- Scenario harness passes fresh_game, narrowed_bounds, and guardrail_conflict.
+- Guardrail behavior is explicitly validated when history is contradictory.
 
 ## Portfolio Artifact
 What this project says about me as an AI engineer:
