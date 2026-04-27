@@ -1,0 +1,13 @@
+flowchart TD
+    U[Player Input Guess] --> UI[Streamlit App]
+    UI --> CORE[Game Logic Functions]
+    CORE --> STATE[Session State Updates]
+    STATE --> RAG[AI Advisor RAG Layer]
+    RAG --> RETRIEVE[Retrieve Heuristics]
+    RETRIEVE --> REASON[Reasoning + Confidence]
+    REASON --> GUARD[Guardrail Check]
+    GUARD --> UI
+    UI --> OUT[Hint + Score + AI Recommendation]
+
+    T[Pytest + evaluate_system.py] --> RELIABILITY[Reliability Summary]
+    RELIABILITY --> H[Human Review]

@@ -1,64 +1,164 @@
-# 🎮 Game Glitch Investigator: The Impossible Guesser
+# AI Strategy Guesser: Applied AI System
 
-## 🚨 The Situation
+## Project Summary
+AI Strategy Guesser is an upgraded version of the Streamlit number-guessing game that now includes a retrieval-augmented AI advisor. Instead of only giving basic higher/lower hints, the system retrieves strategy context, reasons over prior outcomes, recommends the next guess, and reports confidence with guardrails.
 
-You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
+This project demonstrates end-to-end applied AI engineering with modular logic, explainability, reliability testing, and professional documentation.
 
-- You can't win.
-- The hints lie to you.
-- The secret number seems to have commitment issues.
+## Original Project (Module 1-3 Base)
+Original project: **Game Glitch Investigator (Module 1)**.
 
-## 🛠️ Setup
+The original project focused on debugging an AI-generated guessing game with broken hints and unstable session state. Its main capabilities were selecting difficulty, submitting guesses, and scoring a game round. This final project extends that baseline into a complete applied AI system with retrieval, reasoning trace, confidence scoring, and reliability evaluation.
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run the broken app: `python -m streamlit run app.py`
+## Required AI Feature
+This project implements **Retrieval-Augmented Generation (RAG)-style behavior** in a deterministic local advisor:
 
-## 🕵️‍♂️ Your Mission
+1. Retrieves relevant strategy snippets from a small knowledge base.
+2. Uses game history to compute valid candidate bounds.
+3. Recommends a next guess and confidence score.
+4. Blocks unsafe recommendations when history is contradictory.
 
-1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
-3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
-4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
-   - Run `pytest` in your terminal.
-   - Keep fixing until all tests pass!
+The feature is integrated into the app flow via:
+- `Enable AI advisor`
+- `AI Take Turn`
+- AI explanation and confidence output after each round
 
-## 📝 Document Your Experience
+## Architecture Overview
+Core components:
 
-- [x] Describe the game's purpose.
-- [x] Detail which bugs you found.
-- [x] Explain what fixes you applied.
+1. Streamlit UI (`app.py`)
+2. Game logic module (`logic_utils.py`)
+3. AI advisor module (`ai_advisor.py`)
+4. Reliability/evaluation scripts (`tests/`, `evaluate_system.py`)
 
-### Game Purpose
-This project is a number guessing game built with Streamlit where the player selects a difficulty, guesses a secret number, and receives feedback until they win or run out of attempts. The game tracks attempts, guess history, and score. The assignment focus is debugging AI-generated code, improving code structure, and validating repairs with automated tests.
+Data flow diagram:
 
-### Bugs Found
-1. Hint direction bug: when a guess was too high, the app told the user to go higher (and vice versa), which made gameplay misleading.
-2. Secret type/state bug: the app sometimes converted the secret number to a string before comparison, causing inconsistent guess logic.
-3. New game reset bug: pressing "New Game" did not reliably reset the full session state and could leave the app in a broken interaction state.
-4. Attempts/flow bug: attempts handling could feel inconsistent, and invalid guesses could still interfere with expected game progression.
+```mermaid
+flowchart TD
+   U[Player Input Guess] --> UI[Streamlit App]
+   UI --> CORE[Game Logic Functions]
+   CORE --> STATE[Session State Updates]
+   STATE --> RAG[AI Advisor RAG Layer]
+   RAG --> RETRIEVE[Retrieve Heuristics]
+   RETRIEVE --> REASON[Reasoning + Confidence]
+   REASON --> GUARD[Guardrail Check]
+   GUARD --> UI
+   UI --> OUT[Hint + Score + AI Recommendation]
 
-### Fixes Applied
-1. Refactored core game logic into `logic_utils.py` by implementing `get_range_for_difficulty`, `parse_guess`, `check_guess`, and `update_score`.
-2. Updated `app.py` to import and use logic helpers instead of keeping buggy duplicate logic in the UI layer.
-3. Fixed hint logic so outcomes and guidance match correctly (`Too High -> Try lower`, `Too Low -> Try higher`).
-4. Stabilized state management by resetting secret/attempts/score/status/history correctly on "New Game" and when difficulty changes.
-5. Added safer input handling (empty input, non-number input, and fractional decimal rejection) and range checks.
-6. Repaired and expanded tests to validate outcomes, parsing behavior, and scoring updates.
+   T[Pytest + evaluate_system.py] --> RELIABILITY[Reliability Summary]
+   RELIABILITY --> H[Human Review]
+```
 
-## 📸 Demo
+Diagram source is also saved in `assets/system_architecture.mmd`.
 
-- [X] Insert screenshot: fixed winning game view (`streamlit run app.py`)
+## Setup Instructions
+1. Create and activate a virtual environment (recommended).
+2. Install dependencies:
 
-![Winning game demo](screenshots/winning-game.png)
+```bash
+pip install -r requirements.txt
+```
 
-- [X] Insert screenshot: `pytest` passing output (optional challenge evidence)
+3. Run the Streamlit app:
 
-![Pytest passing](screenshots/pytest-passing.png)
+```bash
+python -m streamlit run app.py
+```
 
-### Test Status
-`pytest` result: **7 passed**
+4. Run tests:
 
-## 🚀 Stretch Features
+```bash
+pytest
+```
 
-- [ ] [If you choose to complete Challenge 4, insert a screenshot of your Enhanced Game UI here]
+5. Run evaluation harness:
+
+```bash
+python evaluate_system.py
+```
+
+## Sample Interactions
+### Interaction 1: Fresh game with AI recommendation
+Input state: `difficulty=Normal`, no prior guesses.
+
+Output:
+- AI recommends guess `50`
+- Confidence is moderate (`~0.45`)
+- Retrieved strategy includes midpoint and bounds guidance
+
+### Interaction 2: After two rounds
+Input rounds:
+- Guess `50` -> `Too High`
+- Guess `25` -> `Too Low`
+
+Output:
+- Computed bounds become `[26, 49]`
+- AI recommends `37`
+- Confidence increases due to reduced candidate range
+
+### Interaction 3: Contradictory state
+Input rounds:
+- Guess `30` -> `Too Low`
+- Guess `25` -> `Too High`
+
+Output:
+- AI guardrail triggers
+- Recommendation is blocked
+- UI asks user to reset game state
+
+## Design Decisions and Trade-Offs
+1. Local deterministic advisor over external LLM API.
+Trade-off: stronger reproducibility and no API key requirement, but less expressive language generation.
+
+2. Transparent reasoning trace in UI.
+Trade-off: better auditability, but slightly more verbose interface.
+
+3. Heuristic confidence score.
+Trade-off: practical for this domain, but not statistically calibrated for real-world risk decisions.
+
+## Reliability and Evaluation
+Reliability methods used:
+
+1. Unit tests for core game logic and advisor behavior.
+2. Scenario-based evaluation script (`evaluate_system.py`) with pass/fail summary.
+3. Guardrail behavior for contradictory histories.
+
+Latest summary:
+- All pytest tests pass.
+- Evaluation script scenarios pass.
+- Advisor confidence increases as the search space narrows.
+
+## Testing Summary
+What worked:
+- Bounds logic, midpoint recommendation, and scoring flow were consistent.
+- Guardrail behavior prevented unsafe recommendations.
+
+What did not work initially:
+- Early drafts allowed contradictory hints to produce guesses.
+
+What changed:
+- Added explicit consistency checks and blocked output on conflict.
+
+## Reflection
+This project reinforced that AI reliability depends on system design, not just model output quality. Confidence, retrieval trace, and guardrails made behavior easier to inspect and trust. Iterative testing showed that deterministic checks are powerful for controlling failure modes in small applied AI systems.
+
+## Loom Walkthrough
+Add your recording link here:
+
+- Loom demo: `PASTE_YOUR_LOOM_LINK_HERE`
+
+Video checklist coverage:
+- End-to-end run with 2-3 inputs
+- AI feature behavior
+- Reliability/guardrail behavior
+- Clear outputs for each case
+
+## Portfolio Artifact
+What this project says about me as an AI engineer:
+
+I design AI systems with a reliability-first mindset: observable reasoning, safe failure modes, and measurable behavior. I can take a buggy prototype and evolve it into a modular, testable, and production-minded applied AI artifact.
+
+## Assets and Evidence
+- Architecture source: `assets/system_architecture.mmd`
+- Demo screenshots: `screenshots/winning-game.png`, `screenshots/pytest-passing.png`
+- Reflection and ethics: `model_card.md`
