@@ -154,7 +154,7 @@ Case 1 input: Fresh game, click AI Take Turn.
 Expected output: recommendation near midpoint with confidence and context.
 Evidence image:
 
-![Case 1 fresh game](screenshots/winning-game.png)
+![Case 1 fresh game](screenshots/case1-fresh-game.png)
 
 Case 2 input: Round history with 50 -> Too High, 25 -> Too Low, then AI Take Turn.
 Expected output: narrowed bounds [26, 49] and next guess 37.
@@ -172,7 +172,8 @@ Evidence image:
 The AI advisor retrieves strategy context, computes bounds from history, and produces a confidence score.
 Evidence image:
 
-![AI advisor behavior](screenshots/case4-ai-advisor-behavior.png)
+![AI advisor behavior1](screenshots/case4-ai-advisor-behavior1.png)
+![AI advisor behavior2](screenshots/case4-ai-advisor-behavior2.png)
 
 ### ✅ Reliability and guardrail or evaluation behavior
 Commands used:
@@ -209,5 +210,4 @@ I design AI systems with a reliability-first mindset: observable reasoning, safe
 
 ## Assets and Evidence
 - Architecture source: `assets/system_architecture.mmd`
-- Demo screenshots: `screenshots/winning-game.png`, `screenshots/pytest-passing.png`
 - Reflection and ethics: `model_card.md`
