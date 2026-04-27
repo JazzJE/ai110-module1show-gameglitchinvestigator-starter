@@ -142,47 +142,65 @@ What changed:
 ## Reflection
 This project reinforced that AI reliability depends on system design, not just model output quality. Confidence, retrieval trace, and guardrails made behavior easier to inspect and trust. Iterative testing showed that deterministic checks are powerful for controlling failure modes in small applied AI systems.
 
-## Screenshot Walkthrough (Submission Alternative)
-This repository uses the screenshot walkthrough option instead of a Loom recording. The walkthrough demonstrates end-to-end behavior, AI recommendations, and reliability checks.
+## Screenshot Walkthrough (Grading Checklist Aligned)
+This section replaces a video walkthrough with image evidence that maps directly to the required grading checks.
 
-### Step 1: Run the app end-to-end
-Command used:
+### ✅ End-to-end system run (2-3 inputs)
+Run command:
 
 python -m streamlit run app.py
 
-Evidence screenshot:
+Case 1 input: Fresh game, click AI Take Turn.
+Expected output: recommendation near midpoint with confidence and context.
+Evidence image:
 
-![Winning game demo](screenshots/winning-game.png)
+![Case 1 fresh game](screenshots/winning-game.png)
 
-### Step 2: Example inputs and AI-style responses
-These examples reflect the same system behavior validated by tests and the evaluation harness.
+Case 2 input: Round history with 50 -> Too High, 25 -> Too Low, then AI Take Turn.
+Expected output: narrowed bounds [26, 49] and next guess 37.
+Evidence image:
 
-1. Fresh game (Normal range 1-100)
-Input context: no prior rounds.
-System response: advisor recommends midpoint guess 50 with moderate confidence.
+![Case 2 narrowed bounds](screenshots/case2-narrowed-bounds.png)
 
-2. Narrowed bounds from hint history
-Input rounds: 50 -> Too High, 25 -> Too Low.
-System response: bounds become [26, 49], advisor recommends 37, confidence increases.
+Case 3 input: Conflicting history scenario (30 -> Too Low and 25 -> Too High).
+Expected output: advisor blocks recommendation and requests reset.
+Evidence image:
 
-3. Conflicting history guardrail
-Input rounds: 30 -> Too Low, 25 -> Too High.
-System response: advisor blocks recommendation and requests reset (guardrail path).
+![Case 3 guardrail conflict](screenshots/case3-guardrail-conflict.png)
 
-### Step 3: Reliability checks
+### ✅ AI feature behavior (RAG-style advisor)
+The AI advisor retrieves strategy context, computes bounds from history, and produces a confidence score.
+Evidence image:
+
+![AI advisor behavior](screenshots/case4-ai-advisor-behavior.png)
+
+### ✅ Reliability and guardrail or evaluation behavior
 Commands used:
 
 pytest
 python evaluate_system.py
 
-Evidence screenshot:
+Expected output:
+- Unit tests pass.
+- Evaluation scenarios pass.
+- `guardrail_conflict` appears as PASS.
 
-![Pytest passing](screenshots/pytest-passing.png)
+Evidence image:
 
-Observed evaluation summary:
-- All unit tests pass.
-- Scenario harness passes fresh_game, narrowed_bounds, and guardrail_conflict.
-- Guardrail behavior is explicitly validated when history is contradictory.
+![Reliability output](screenshots/pytest-passing.png)
+
+### ✅ Clear outputs for each case
+Output checklist:
+- Case 1 shows recommendation and confidence.
+- Case 2 shows updated recommendation after narrowed bounds.
+- Case 3 shows guardrail block behavior.
+- Reliability output shows test and evaluation PASS status.
+
+### Image Capture Notes
+To complete this checklist, add these screenshots to the `screenshots/` folder:
+- `case2-narrowed-bounds.png`
+- `case3-guardrail-conflict.png`
+- `case4-ai-advisor-behavior.png`
 
 ## Portfolio Artifact
 What this project says about me as an AI engineer:
